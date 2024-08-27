@@ -42,6 +42,7 @@ public class SubscriptionServiceTest {
         pass = subscribe_newSubscription_subscriptionReturned();
         pass = getSubscription_existingSubscription_subscriptionReturned() && pass;
         pass = subscribe_unknownCustomer_exceptionOccurs() && pass;
+        pass = subscribe_unknownASIN_exceptionOccurs() && pass;
 
         if (!pass) {
             String errorMessage = "\n/!\\ /!\\ /!\\ The SubscriptionService tests failed. Test aborted. /!\\ /!\\ /!\\";
@@ -117,10 +118,33 @@ public class SubscriptionServiceTest {
         return false;
     }
 
+    public boolean subscribe_unknownASIN_exceptionOccurs() {
+        // GIVEN - an invalid ASIN to make a subscription for
+        String customerId = CUSTOMER_ID;
+        String asin = "banana";
+        int frequency = 1;
+
+        // WHEN/THEN - try to create a new subscription, catch IllegalArgumentException
+        try {
+            Subscription result = classUnderTest.subscribe(customerId, asin, frequency);
+        } catch (IllegalArgumentException w) {
+            System.out.println("  PASS: Cannot subscribe with invalid ASIN.");
+            return true;
+        }
+
+        System.out.println("   FAIL: An exception should have occurred when subscribing invalid ASIN.");
+        return false;
+    }
+
 
     @BeforeEach
     @AfterEach
     private void restoreSubscriptions() {
         SubscriptionRestorer.restoreSubscriptions();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
     }
 }
