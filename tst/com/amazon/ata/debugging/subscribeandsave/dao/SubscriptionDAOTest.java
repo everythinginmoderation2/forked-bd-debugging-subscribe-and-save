@@ -83,7 +83,7 @@ public class SubscriptionDAOTest {
 
         // THEN - a subscription object is not returned, null is
         if (result != null) {
-            System.out.println("   FAIL: Getting a non existent subscription should reutrn null.");
+            System.out.println("   FAIL: Getting a non existent subscription should return null.");
             return false;
         }
 

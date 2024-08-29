@@ -62,7 +62,7 @@ public class SubscriptionServiceTest {
 
         // THEN - a subscription object is returned, with a matching id
         if (result == null) {
-            System.out.println("   FAIL: Getting a subscription for a valid if should return the subscription.");
+            System.out.println("   FAIL: Getting a subscription for a valid id should return the subscription.");
             return false;
         }
         if (!subscriptionId.equals(result.getId())) {

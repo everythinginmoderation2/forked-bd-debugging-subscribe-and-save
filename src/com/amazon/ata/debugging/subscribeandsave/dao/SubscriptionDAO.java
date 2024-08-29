@@ -38,8 +38,8 @@ public class SubscriptionDAO {
      */
     public Subscription createSubscription(String customerId, String asin, int frequency) {
         Subscription subscription = Subscription.builder()
-                                                .withAsin(asin)
                                                 .withCustomerId(customerId)
+                                                .withAsin(asin)
                                                 .withFrequency(frequency)
                                                 .build();
 

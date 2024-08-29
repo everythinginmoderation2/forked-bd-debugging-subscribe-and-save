@@ -17,6 +17,10 @@ public class SubscriptionFileStorageTest {
     private static final String ASIN = "B01BMDAVIY";
     private static final String CUSTOMER_ID = "amzn1.account.AEZI3A063427738YROOFT8WCXKDE";
 
+    private static final String SUBSCRIPTION_ID = "81a9792e-9b4c-4090-aac8-28e733ac2f54";
+    private static final String invalidASIN2 = "amzn1.account.AEZI3A027560538W420H09ACTDP2";
+    private static final String invalidCUSTOMER_ID2 = "B00006IEJB";
+
     private SubscriptionFileStorage classUnderTest;
 
     /**
@@ -40,6 +44,7 @@ public class SubscriptionFileStorageTest {
         boolean pass = true;
 
         pass = writeSubscription_newSubscription_SubscriptionReturnedWithId();
+        pass = getSubscription_existingSubscription_SubscriptionReturnedWithMismatchedValues();
 
         if (!pass) {
             String errorMessage = "\n/!\\ /!\\ /!\\ The SubscriptionFileStorage tests failed. Test aborted. /!\\ /!\\ /!\\";
@@ -72,6 +77,28 @@ public class SubscriptionFileStorageTest {
         }
 
         System.out.println("  PASS: Creating a new subscription succeeded.");
+        return true;
+    }
+
+
+    public boolean getSubscription_existingSubscription_SubscriptionReturnedWithMismatchedValues() {
+        // GIVEN - an existing subscription Id
+        String subscriptionId = SUBSCRIPTION_ID;
+
+        // WHEN - return an exisiting subscription using an existing subscriptionId
+        Subscription result = classUnderTest.getSubscriptionById(subscriptionId);
+
+        // THEN a subscription should be returned and the id field should be populated
+        if (result.getAsin().equals(invalidASIN2)) {
+            System.out.println("   FAIL: ASIN should not return CustomerId. Check getSubscriptionId");
+            return false;
+        }
+        if (result.getCustomerId().equals(invalidCUSTOMER_ID2)) {
+            System.out.println("   FAIL: CustomerId should not return ASIN. Check getSubscriptionId");
+            return false;
+        }
+
+        System.out.println("  PASS: New subscription with no mismatched fields.");
         return true;
     }
 
