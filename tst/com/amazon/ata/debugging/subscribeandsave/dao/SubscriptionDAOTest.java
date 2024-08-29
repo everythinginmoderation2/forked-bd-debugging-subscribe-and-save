@@ -16,6 +16,8 @@ public class SubscriptionDAOTest {
     private static final String ASIN = "B01BMDAVIY";
     private static final String CUSTOMER_ID = "amzn1.account.AEZI3A06339413S37ZHKJQUEGLC4";
     private static final String SUBSCRIPTION_ID = "81a9792e-9b4c-4090-aac8-28e733ac2f54";
+    //An example product that should belong in part of the product database indicating items that are SNS ineligible
+    private static final String snsIneligibleProductASIN = "B07R5QD598";
 
     private SubscriptionDAO classUnderTest;
 
@@ -40,6 +42,7 @@ public class SubscriptionDAOTest {
         boolean pass = true;
 
         pass = createSubscription_newSubscription_subscriptionReturned();
+        pass = createSubscription_newSubscription_SNSIneligbleProduct();
         pass = getSubscription_existingSubscription_subscriptionReturned() && pass;
         pass = getSubscription_subscriptionDoesNotExist_nullReturned() && pass;
 
@@ -113,6 +116,26 @@ public class SubscriptionDAOTest {
         }
 
         System.out.println("  PASS: Creating a new subscription succeeded.");
+        return true;
+    }
+
+    public boolean createSubscription_newSubscription_SNSIneligbleProduct() {
+        // GIVEN - a valid customerId to make a subscription for, SNS-ineligble product asin to subscribe to,
+        // and the frequency to receive subscription
+        String customerId = CUSTOMER_ID;
+        String asin = ASIN;
+        int frequency = 1;
+
+        // WHEN - create a new subscription attempt made
+        Subscription result = classUnderTest.createSubscription(customerId, asin, frequency);
+
+        // THEN a subscription should be returned and the asin field should be populated
+        if (result.getAsin().equals(snsIneligibleProductASIN)) {
+            System.out.println("   FAIL: Product is not eligible for SNS. Subscription cannot be created.");
+            return false;
+        }
+
+        System.out.println("  PASS: Product is SNS elgible. Creating a new subscription succeeded.");
         return true;
     }
 
